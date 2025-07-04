@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, Clock, ChevronUp, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Play, Pause, RotateCcw, Clock, ChevronUp, ChevronDown, BookOpen, Heart, Dumbbell, Activity } from 'lucide-react';
 
 export default function TimerApp() {
+  const navigate = useNavigate();
   const [totalMinutes, setTotalMinutes] = useState(10);
   const [intervalSeconds, setIntervalSeconds] = useState(30);
   const [totalSets, setTotalSets] = useState(1);
@@ -78,12 +80,42 @@ export default function TimerApp() {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const applyPreset = (preset) => {
+    switch(preset) {
+      case 'pomodoro':
+        setTotalMinutes(25);
+        setIntervalSeconds(300); // 5 minute intervals
+        setTotalSets(4);
+        break;
+      case 'hiit':
+        setTotalMinutes(20);
+        setIntervalSeconds(30); // 30 second intervals
+        setTotalSets(3);
+        break;
+      case 'yoga':
+        setTotalMinutes(30);
+        setIntervalSeconds(60); // 1 minute intervals
+        setTotalSets(1);
+        break;
+      case 'weightlifting':
+        setTotalMinutes(45);
+        setIntervalSeconds(180); // 3 minute intervals
+        setTotalSets(1);
+        break;
+    }
+    // Reset timer when applying preset
+    resetTimer();
+  };
+
   const remainingIntervals = Math.ceil(timeRemaining / intervalSeconds);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 flex flex-col items-center justify-center">
       <div className="w-full max-w-md space-y-8">
-        <h1 className="text-4xl font-bold text-center mb-8 flex items-center justify-center gap-2">
+        <h1 
+          onClick={() => navigate('/')}
+          className="text-4xl font-bold text-center mb-8 flex items-center justify-center gap-2 cursor-pointer hover:text-gray-300 transition-colors"
+        >
           <Clock className="w-8 h-8" />
           Interval Timer
         </h1>
@@ -185,21 +217,21 @@ export default function TimerApp() {
         {(timeRemaining > 0 || isRunning) && (
           <div className="space-y-6">
             <div className="bg-gray-800 rounded-2xl p-8 text-center">
-              <div className="text-6xl font-mono font-bold mb-4">
-                {formatTime(timeRemaining)}
-              </div>
-              <div className="text-gray-400 text-lg">
+              <div className={`text-gray-400 text-lg mb-2 ${isRunning ? 'font-mono uppercase' : ''}`}>
                 {remainingIntervals} interval{remainingIntervals !== 1 ? 's' : ''} remaining
               </div>
               {totalSets > 1 && (
-                <div className="text-gray-400 text-lg mt-2">
+                <div className={`text-gray-400 text-lg mb-4 ${isRunning ? 'font-mono uppercase' : ''}`}>
                   Set {currentSet} of {totalSets}
                 </div>
               )}
+              <div className="text-6xl font-mono font-bold">
+                {formatTime(timeRemaining)}
+              </div>
             </div>
 
             <div className="bg-gray-800 rounded-2xl p-4">
-              <div className="text-center text-gray-400 mb-2">Next interval in:</div>
+              <div className={`text-center text-gray-400 mb-2 ${isRunning ? 'font-mono uppercase' : ''}`}>Next interval in:</div>
               <div className="text-3xl font-mono text-center font-semibold text-blue-400">
                 {formatTime(timeRemaining % intervalSeconds || intervalSeconds)}
               </div>
@@ -255,6 +287,58 @@ export default function TimerApp() {
               </button>
             </>
           )}
+        </div>
+
+        {/* Presets Section */}
+        <div className="mt-8 space-y-4">
+          <div className="border-t border-dotted border-gray-600 pt-6">
+            <h3 className="text-xl font-semibold text-center text-gray-300 mb-4">Presets</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => applyPreset('pomodoro')}
+                className="flex flex-col items-center gap-1 p-4 bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors"
+              >
+                <BookOpen className="w-6 h-6 text-blue-400" />
+                <span className="font-medium">Pomodoro</span>
+                <span className="text-xs text-gray-400">25 min × 4 sets</span>
+                <span className="text-xs text-gray-500">5 min intervals</span>
+              </button>
+              <button
+                onClick={() => applyPreset('hiit')}
+                className="flex flex-col items-center gap-1 p-4 bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors"
+              >
+                <Heart className="w-6 h-6 text-red-400" />
+                <span className="font-medium">HIIT Cardio</span>
+                <span className="text-xs text-gray-400">20 min × 3 sets</span>
+                <span className="text-xs text-gray-500">30 sec intervals</span>
+              </button>
+              <button
+                onClick={() => applyPreset('yoga')}
+                className="flex flex-col items-center gap-1 p-4 bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors"
+              >
+                <Activity className="w-6 h-6 text-purple-400" />
+                <span className="font-medium">Yoga Flow</span>
+                <span className="text-xs text-gray-400">30 min × 1 set</span>
+                <span className="text-xs text-gray-500">1 min intervals</span>
+              </button>
+              <button
+                onClick={() => applyPreset('weightlifting')}
+                className="flex flex-col items-center gap-1 p-4 bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors"
+              >
+                <Dumbbell className="w-6 h-6 text-green-400" />
+                <span className="font-medium">Weightlifting</span>
+                <span className="text-xs text-gray-400">45 min × 1 set</span>
+                <span className="text-xs text-gray-500">3 min intervals</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 pt-6 border-t border-dotted border-gray-600">
+          <p className="text-center text-gray-500 text-sm">
+            Created by Grace Park (2025)
+          </p>
         </div>
       </div>
     </div>
