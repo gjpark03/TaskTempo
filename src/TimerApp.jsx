@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, Clock } from 'lucide-react';
+import { Play, Pause, RotateCcw, Clock, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function TimerApp() {
   const [totalMinutes, setTotalMinutes] = useState(10);
@@ -81,28 +81,60 @@ export default function TimerApp() {
               <label className="block text-sm font-medium mb-2">
                 Total Time (minutes)
               </label>
-              <input
-                type="number"
-                min="1"
-                max="120"
-                value={totalMinutes}
-                onChange={(e) => setTotalMinutes(parseInt(e.target.value) || 1)}
-                className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setTotalMinutes(Math.max(1, totalMinutes - 1))}
+                  className="p-3 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-colors"
+                  aria-label="Decrease total time"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  max="120"
+                  value={totalMinutes}
+                  onChange={(e) => setTotalMinutes(parseInt(e.target.value) || 1)}
+                  className="flex-1 px-4 py-3 rounded-lg bg-gray-700 text-white text-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={() => setTotalMinutes(Math.min(120, totalMinutes + 1))}
+                  className="p-3 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-colors"
+                  aria-label="Increase total time"
+                >
+                  <ChevronUp className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">
                 Interval (seconds)
               </label>
-              <input
-                type="number"
-                min="5"
-                max="300"
-                value={intervalSeconds}
-                onChange={(e) => setIntervalSeconds(parseInt(e.target.value) || 5)}
-                className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIntervalSeconds(Math.max(5, intervalSeconds - 5))}
+                  className="p-3 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-colors"
+                  aria-label="Decrease interval"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </button>
+                <input
+                  type="number"
+                  min="5"
+                  max="300"
+                  value={intervalSeconds}
+                  onChange={(e) => setIntervalSeconds(parseInt(e.target.value) || 5)}
+                  className="flex-1 px-4 py-3 rounded-lg bg-gray-700 text-white text-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={() => setIntervalSeconds(Math.min(300, intervalSeconds + 5))}
+                  className="p-3 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-colors"
+                  aria-label="Increase interval"
+                >
+                  <ChevronUp className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
         )}
