@@ -4,9 +4,14 @@ A mobile-friendly interval timer application built with React and Vite. Perfect 
 
 ![Timer App](https://img.shields.io/badge/React-18.2.0-blue) ![Vite](https://img.shields.io/badge/Vite-5.2.0-purple) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-teal)
 
+## 🚀 Live Demo
+
+Live application: [**Interval Timer App on Vercel**](https://task-tempo-lemon.vercel.app)
+
 ## 📋 Table of Contents
 
 - [Features](#features)
+- [Design](#design)
 - [Updates](#updates)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -25,6 +30,20 @@ A mobile-friendly interval timer application built with React and Vite. Perfect 
 - **Timer Controls**: Start, Pause, Resume, and Reset functionality
 - **Real-time Display**: Shows remaining time and intervals
 - **Dark Theme**: Easy on the eyes during workouts
+
+## 🎨 Design
+
+### Figma Wireframes
+
+View the design process and wireframes on Figma:
+
+[**View Figma Wireframes**](https://www.figma.com/design/2qpJMnJQJJWAH0Hd9FMzWd/TaskTempo-Wireframes?node-id=0-1&t=9hg1zXvm3WUdhpic-1)
+
+The Figma file includes:
+- Mobile and desktop layouts
+- Component design system
+- User flow diagrams
+- Interactive prototypes
 
 ## 📅 Updates
 
