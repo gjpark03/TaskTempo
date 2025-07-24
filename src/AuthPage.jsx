@@ -1,22 +1,59 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, Lock, User } from 'lucide-react';
+import { ArrowLeft, Mail, Lock, User, AlertCircle } from 'lucide-react';
+import { supabase } from './supabaseClient';
 
 export default function AuthPage() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     name: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would handle authentication
-    console.log(isLogin ? 'Login' : 'Signup', formData);
-    // For now, just navigate to timer
-    navigate('/timer');
+    setLoading(true);
+    setError('');
+
+    try {
+      if (isLogin) {
+        // Sign in
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        });
+        
+        if (error) throw error;
+        
+        // Successful login
+        navigate('/timer');
+      } else {
+        // Sign up
+        const { data, error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              name: formData.name,
+            }
+          }
+        });
+        
+        if (error) throw error;
+        
+        // Show success message
+        setError('Check your email for the confirmation link!');
+        setIsLogin(true);
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -41,6 +78,17 @@ export default function AuthPage() {
           <h2 className="text-3xl font-bold text-center mb-8">
             {isLogin ? 'Welcome Back' : 'Create Account'}
           </h2>
+
+          {error && (
+            <div className={`mb-6 p-3 rounded-lg flex items-center gap-2 ${
+              error.includes('Check your email') 
+                ? 'bg-green-600/20 text-green-400' 
+                : 'bg-red-600/20 text-red-400'
+            }`}>
+              <AlertCircle className="w-5 h-5" />
+              <span className="text-sm">{error}</span>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
@@ -101,9 +149,14 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+              disabled={loading}
+              className={`w-full py-3 rounded-lg font-semibold transition-colors ${
+                loading 
+                  ? 'bg-gray-600 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
             >
-              {isLogin ? 'Sign In' : 'Create Account'}
+              {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
           </form>
 
@@ -112,7 +165,10 @@ export default function AuthPage() {
               {isLogin ? "Don't have an account?" : "Already have an account?"}
               <button
                 type="button"
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setError('');
+                }}
                 className="ml-2 text-blue-500 hover:text-blue-400 font-semibold"
               >
                 {isLogin ? 'Sign Up' : 'Sign In'}
