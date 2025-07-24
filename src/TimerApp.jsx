@@ -117,7 +117,7 @@ export default function TimerApp() {
           className="text-4xl font-bold text-center mb-8 flex items-center justify-center gap-2 cursor-pointer hover:text-gray-300 transition-colors"
         >
           <Clock className="w-8 h-8" />
-          Interval Timer
+          TaskTempo
         </h1>
 
         {timeRemaining === 0 && !isRunning && (
@@ -337,7 +337,7 @@ export default function TimerApp() {
         {/* Footer */}
         <div className="mt-8 pt-6 border-t border-dotted border-gray-600">
           <p className="text-center text-gray-500 text-sm">
-            Created by Grace Park (2025)
+            TaskTempo - Created by Grace Park (2025)
           </p>
         </div>
       </div>

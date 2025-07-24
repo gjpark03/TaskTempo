@@ -1,4 +1,4 @@
-# Interval Timer App
+# TaskTempo - The Ultimate Interval Timer App
 
 A mobile-friendly interval timer application built with React and Vite. Perfect for workouts, meditation sessions, or any activity requiring timed intervals.
 

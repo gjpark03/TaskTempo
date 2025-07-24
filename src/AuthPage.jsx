@@ -30,7 +30,7 @@ export default function AuthPage() {
         if (error) throw error;
         
         // Successful login
-        navigate('/timer');
+        navigate('/');
       } else {
         // Sign up
         const { data, error } = await supabase.auth.signUp({
