@@ -14,6 +14,7 @@ export default function TimerApp() {
   const [currentRep, setCurrentRep] = useState(1);
   const [isWorkPhase, setIsWorkPhase] = useState(true);
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const [totalTimeRemaining, setTotalTimeRemaining] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
 
@@ -45,6 +46,7 @@ export default function TimerApp() {
     if (isRunning && timeRemaining > 0) {
       intervalRef.current = setInterval(() => {
         setTimeRemaining(prev => prev - 1);
+        setTotalTimeRemaining(prev => prev - 1);
       }, 1000);
     } else if (isRunning && timeRemaining === 0) {
       // Handle phase transitions
@@ -94,6 +96,7 @@ export default function TimerApp() {
     if (timeRemaining === 0) {
       // Starting fresh
       setTimeRemaining(workMinutes * 60 + workSeconds);
+      setTotalTimeRemaining(calculateTotalTime());
       setCurrentSet(1);
       setCurrentRep(1);
       setIsWorkPhase(true);
@@ -108,6 +111,7 @@ export default function TimerApp() {
   const resetTimer = () => {
     setIsRunning(false);
     setTimeRemaining(0);
+    setTotalTimeRemaining(0);
     setCurrentSet(1);
     setCurrentRep(1);
     setIsWorkPhase(true);
@@ -183,10 +187,22 @@ export default function TimerApp() {
 
         {/* Total Time Display */}
         <div className="bg-gray-800 rounded-2xl p-6 text-center">
-          <p className="text-sm text-gray-400 mb-2 uppercase">Total Workout Time</p>
-          <div className="text-5xl font-mono font-bold text-blue-400">
-            {formatTotalTime(totalTime)}
+          <p className="text-sm text-gray-400 mb-2 uppercase">
+            {isRunning ? 'Time Remaining' : 'Total Workout Time'}
+          </p>
+          <div className="text-5xl font-mono font-bold text-blue-400 mb-4">
+            {isRunning ? formatTotalTime(totalTimeRemaining) : formatTotalTime(totalTime)}
           </div>
+          {isRunning && (
+            <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+              <div
+                className="h-full bg-[#BB4430] transition-all duration-1000 ease-linear"
+                style={{
+                  width: `${(totalTimeRemaining / totalTime) * 100}%`
+                }}
+              />
+            </div>
+          )}
         </div>
 
         {timeRemaining === 0 && !isRunning && (
