@@ -188,7 +188,7 @@ export default function TimerApp() {
         {/* Total Time Display */}
         <div className="bg-gray-800 rounded-2xl p-6 text-center">
           <p className="text-sm text-gray-400 mb-2 uppercase">
-            {isRunning ? 'Time Remaining' : 'Total Workout Time'}
+            {isRunning ? 'Time Remaining' : 'Total Time'}
           </p>
           <div className="text-5xl font-mono font-bold text-blue-400 mb-4">
             {isRunning ? formatTotalTime(totalTimeRemaining) : formatTotalTime(totalTime)}
@@ -344,7 +344,7 @@ export default function TimerApp() {
               disabled={!workMinutes && !workSeconds}
             >
               <Play className="w-5 h-5" />
-              Start Workout
+              Start Timer
             </button>
           )}
 
